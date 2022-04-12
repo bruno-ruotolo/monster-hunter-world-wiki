@@ -1,5 +1,27 @@
 const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+const plugins = process.env.NODE_ENV === "production" ?
+  [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./src/template.html",
+      inject: "body"
+    }),
+  ]
+  : [
+    new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./src/template.html",
+      inject: "body"
+    }),
+    new ReactRefreshWebpackPlugin()
+  ]
 
 module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
@@ -11,9 +33,7 @@ module.exports = {
     assetModuleFilename: "images/[name]-[hash][ext][query]"
   },
 
-  plugins: [
-    new MiniCssExtractPlugin()
-  ],
+  plugins: plugins,
 
   module: {
     rules: [
@@ -33,8 +53,10 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', ['@babel/preset-react']]
-          }
+            presets: ['@babel/preset-env', ['@babel/preset-react']],
+            plugins: process.env.NODE_ENV === "production" ? [] : ["react-refresh/babel"]
+          },
+
         }
       }
     ]
