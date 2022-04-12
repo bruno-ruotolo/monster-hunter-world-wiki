@@ -1,1 +1,0 @@
-{"version":3,"file":"main.css","mappings":"AAAA;EACE,wBAAwB;AAC1B;;AAEA;EACE,YAAY;AACd,C","sources":["webpack://monster-hunter-wiki/./src/styles.css"],"sourcesContent":["body {\n  background-color: purple;\n}\n\nh1 {\n  color: white;\n}"],"names":[],"sourceRoot":""}

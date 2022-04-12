@@ -1,6 +1,5 @@
-import "./styles.css"
 import { createRoot } from "react-dom/client"
-import React from "react"
+import App from "./components/App";
 
 const root = createRoot(document.querySelector(".root"));
-root.render(<h1>Teste</h1>);
+root.render(<App />);
