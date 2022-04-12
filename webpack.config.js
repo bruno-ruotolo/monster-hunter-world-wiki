@@ -8,6 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    assetModuleFilename: "images/[name]-[hash][ext][query]"
   },
 
   plugins: [
@@ -20,13 +21,19 @@ module.exports = {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, "css-loader"]
       },
+
       {
-        test: /\.js$/,
+        test: /\.(gif|jpe?g|png|svg)$/i,
+        type: "asset/resource"
+      },
+
+      {
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
+            presets: ['@babel/preset-env', ['@babel/preset-react']]
           }
         }
       }
@@ -39,6 +46,8 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
+    open: true, open: true,
+    hot: true,
     compress: true,
     port: 9000,
   },
