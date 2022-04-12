@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
 import Logo from "./MHWLogo.png"
 
@@ -8,7 +9,9 @@ export default function MainScreen() {
       <img src={Logo} alt="MHW Wiki Logo" />
       <Form>
         <input placeholder="Type the monster's name" />
-        <button type="submit"> <ion-icon name="search"></ion-icon> </button>
+        <Link to="/monster-info">
+          <button type="submit"> <ion-icon name="search"></ion-icon> </button>
+        </Link>
       </Form>
     </MainScreenDiv >
   )
