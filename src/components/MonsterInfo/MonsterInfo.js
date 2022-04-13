@@ -8,36 +8,38 @@ import Loader from "./Loader.svg"
 
 export default function MonsterInfo() {
   const { monsterName } = useContext(MonsterContext);
-  const [monsterData, setMonsterData] = useState([]);
-  console.log(monsterData)
+  const [monsterData, setMonsterData] = useState([{ name: "", description, species, type }]);
+  console.log(monsterData);
 
   useEffect(() => {
     const promise = axios.get(`https://mhw-db.com/monsters`);
     promise.then(response => {
       console.log('Entrei')
-      // setMonsterData(response.data.filter((monsterObj) => {
-      //   return monsterName === monsterObj.name;
-      // }));
+      setMonsterData(response.data.filter((monsterObj) => {
+        return monsterName === monsterObj.name;
+      }));
     });
   }, []);
 
-  return monsterData.length !== 0 ? (
+  const { name, description, species, type } = monsterData[0];
+  const nameHandle = name.toLowerCase().replace(/\s/, "");
+
+  return monsterData[0].name ? (
     <>
       <Header />
       <MonsterInfoDiv>
         <MonsterNameImg>
-          <h1>Monster Name</h1>
-
+          <h1>{name}</h1>
           <img
-            src="https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/mhw-great_jagras_render_001.png"
+            src={`https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/mhw-${nameHandle}_render_001.png`}
             alt="monster" />
         </MonsterNameImg>
 
         <MonsterChar>
           <h2>Monster Description</h2>
-          <p>Description: <span>asdasdasdasd</span></p>
-          <p>Type: <span>asdasdasdasd</span> </p>
-          <p>Species: <span>asdasdasdasd</span> </p>
+          <p>Description: <span>{description}</span></p>
+          <p>Type: <span>{type}</span> </p>
+          <p>Species: <span>{species}</span> </p>
 
           <h2>Physical Characteristics</h2>
           <p>Elements: </p>  {/* map */}
@@ -80,6 +82,8 @@ const MonsterChar = styled.article`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+  width: 900px;
+  flex-wrap: wrap;
   
   h2{
     color: white;
@@ -96,6 +100,7 @@ const MonsterChar = styled.article`
     font-size: 20px;
     font-weight: 800;
     font-family: 'Cinzel', serif;
+    margin-bottom: 10px;
   }
 
   span {
