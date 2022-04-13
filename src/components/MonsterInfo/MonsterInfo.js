@@ -7,24 +7,49 @@ import Header from "../Header/Header"
 import Loader from "./Loader.svg"
 
 export default function MonsterInfo() {
-  const { monsterName } = useContext(MonsterContext);
-  const [monsterData, setMonsterData] = useState([{ name: "", description, species, type }]);
-  console.log(monsterData);
+  const { monsterId } = useContext(MonsterContext);
+  const [monsterData, setMonsterData] = useState({
+    name: "",
+    description,
+    species,
+    type,
+    weaknesses: [],
+    locations: [],
+    rewards: []
+  });
+
+  let id = document.URL.slice(-2);
+
+  if (id.match(/[a-z]|[A-Z]|\W/gi)) {
+    id = id.replace(/[a-z]|[A-Z]|\W/gi, "");
+  }
 
   useEffect(() => {
-    const promise = axios.get(`https://mhw-db.com/monsters`);
-    promise.then(response => {
-      console.log('Entrei')
-      setMonsterData(response.data.filter((monsterObj) => {
-        return monsterName === monsterObj.name;
-      }));
-    });
+    const promise = axios.get(`https://mhw-db.com/monsters/${id}`);
+
+    promise.then(response => setMonsterData(response.data))
   }, []);
 
-  const { name, description, species, type } = monsterData[0];
-  const nameHandle = name.toLowerCase().replace(/\s/, "");
+  const { name, description, species, type, elements, weaknesses, locations, rewards } = monsterData;
+  const nameHandle = name.toLowerCase().replace(/\s/, "_");
 
-  return monsterData[0].name ? (
+  let weaknessesArr = null;
+  let locationsArr = null;
+  let rewardsArr = null;
+
+  weaknessesArr = (weaknesses.map((weaknesse) => {
+    return weaknesse.element;
+  }))
+
+  locationsArr = (locations.map((location) => {
+    return location.name;
+  }))
+
+  rewardsArr = (rewards.map((reward) => {
+    return reward.item.name;
+  }))
+
+  return monsterData.name !== "" ? (
     <>
       <Header />
       <MonsterInfoDiv>
@@ -42,12 +67,12 @@ export default function MonsterInfo() {
           <p>Species: <span>{species}</span> </p>
 
           <h2>Physical Characteristics</h2>
-          <p>Elements: </p>  {/* map */}
-          <p>Weaknesses: </p> {/* map */}
+          <p>Elements: <span>{elements.join(", ")}</span></p>
+          <p>Weaknesses:<span>{weaknessesArr.join(", ")}</span></p>
 
           <h2>Extra Information</h2>
-          <p>Locations: </p> {/* map */}
-          <p>Rewards: </p> {/* map */}
+          <p>Locations: <span>{locationsArr.join(", ")}</span></p>
+          <p>Rewards: <span>{rewardsArr.join(", ")}</span> </p>
 
         </MonsterChar>
       </MonsterInfoDiv>

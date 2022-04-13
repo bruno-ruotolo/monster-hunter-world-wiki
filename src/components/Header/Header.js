@@ -1,12 +1,21 @@
 import styled from "styled-components"
+import { useNavigate } from "react-router-dom"
+import { useContext } from "react"
 
 import Logo from "./Logo.png"
+import { MonsterContext } from "../Contexts/Monster";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const { setMonsterId } = useContext(MonsterContext);
 
   return (
     <HeaderDiv>
-      <img src={Logo} alt="MHW Wiki Logo" />
+      <img onClick={() => {
+        setMonsterId(0);
+        navigate('/')
+      }} src={Logo} alt="MHW Wiki Logo" />
       <Form>
         <input placeholder="Type the monster's name" />
         <button type="submit"> <ion-icon name="search"></ion-icon> </button>

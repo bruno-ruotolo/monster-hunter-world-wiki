@@ -16,7 +16,7 @@ export default function App() {
         <GlobalStyles />
         <Routes>
           <Route path="/" element={<MainScreen />} />
-          <Route path="/monster" element={<MonsterInfo />} />
+          <Route path="/monster/:id" element={<MonsterInfo />} />
         </Routes>
       </BrowserRouter>
     </MonsterProvider>

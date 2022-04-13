@@ -7,20 +7,43 @@ import { MonsterContext } from "../Contexts/Monster"
 import Logo from "./MHWLogo.png"
 
 export default function MainScreen() {
-  const { setMonsterName } = useContext(MonsterContext);
+  const [name, setName] = useState('');
+  const [callEffect, setCallEffect] = useState(false)
+  const { monsterId, setMonsterId } = useContext(MonsterContext);
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (callEffect) {
+      const promise = axios.get(`https://mhw-db.com/monsters`);
+
+      promise.then(response => {
+        response.data.forEach(response => {
+          if (response.name === name) {
+            setMonsterId(response.id);
+          }
+        })
+        setCallEffect(false);
+      })
+      promise.catch(error => { alert(`Algo deu errado ${error.response}`) })
+    }
+    if (monsterId !== 0) {
+      navigate(`/monster/${monsterId}`);
+    }
+  }, [callEffect]);
+
+
+
   function handleForm(e) {
     e.preventDefault();
-    navigate("/monster");
+    setCallEffect(true);
   }
 
   return (
     <MainScreenDiv>
       <img src={Logo} alt="MHW Wiki Logo" />
       <Form onSubmit={handleForm}>
-        <input placeholder="Type the monster's name" onChange={(e) => setMonsterName(e.target.value)} />
+        <input placeholder="Type the monster's name" onChange={(e) => setName(e.target.value)} />
         <button type="submit"> <ion-icon name="search"></ion-icon> </button>
       </Form>
     </MainScreenDiv >
