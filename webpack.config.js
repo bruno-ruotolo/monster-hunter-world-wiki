@@ -30,7 +30,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    assetModuleFilename: "images/[name]-[hash][ext][query]"
+    assetModuleFilename: "images/[name]-[hash][ext][query]",
+    publicPath: '/'
   },
 
   plugins: plugins,
@@ -43,7 +44,15 @@ module.exports = {
       },
 
       {
-        test: /\.(gif|jpe?g|png|svg)$/i,
+        test: /\.svg$/i,
+        exclude: /node_modules/,
+        use: {
+          loader: 'svg-react-loader',
+        },
+      },
+
+      {
+        test: /\.(gif|jpe?g|png)$/i,
         type: "asset/resource"
       },
 
@@ -68,6 +77,7 @@ module.exports = {
   devtool: process.env.NODE_ENV === 'development' ? 'eval-cheap-module-source-map' : 'source-map',
 
   devServer: {
+    historyApiFallback: true,
     static: {
       directory: path.join(__dirname, 'dist'),
     },

@@ -1,9 +1,27 @@
 import styled from "styled-components"
+import { useContext, useState, useEffect } from "react"
+import axios from "axios"
 
+import { MonsterContext } from "../Contexts/Monster"
 import Header from "../Header/Header"
+import Loader from "./Loader.svg"
 
 export default function MonsterInfo() {
-  return (
+  const { monsterName } = useContext(MonsterContext);
+  const [monsterData, setMonsterData] = useState([]);
+  console.log(monsterData)
+
+  useEffect(() => {
+    const promise = axios.get(`https://mhw-db.com/monsters`);
+    promise.then(response => {
+      console.log('Entrei')
+      // setMonsterData(response.data.filter((monsterObj) => {
+      //   return monsterName === monsterObj.name;
+      // }));
+    });
+  }, []);
+
+  return monsterData.length !== 0 ? (
     <>
       <Header />
       <MonsterInfoDiv>
@@ -16,7 +34,7 @@ export default function MonsterInfo() {
         </MonsterNameImg>
 
         <MonsterChar>
-          <h2>Monster Descriptions</h2>
+          <h2>Monster Description</h2>
           <p>Description: <span>asdasdasdasd</span></p>
           <p>Type: <span>asdasdasdasd</span> </p>
           <p>Species: <span>asdasdasdasd</span> </p>
@@ -32,7 +50,7 @@ export default function MonsterInfo() {
         </MonsterChar>
       </MonsterInfoDiv>
     </>
-  )
+  ) : (<MonsterLoader><Loader width="300px" /></MonsterLoader>);
 }
 
 const MonsterInfoDiv = styled.section`
@@ -85,5 +103,17 @@ const MonsterChar = styled.article`
     font-size: 17px;
     font-weight: 400;
     font-family: 'Cinzel', serif;
+  }
+`
+
+const MonsterLoader = styled.div`
+  display: flex;
+ flex-direction: column;
+ align-items: center; 
+ justify-content: center;
+ height: 100vh;
+  img {
+    margin-top: 50px;
+    width: 400px;
   }
 `

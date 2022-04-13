@@ -1,17 +1,27 @@
 import styled from "styled-components"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useContext, useState, useEffect } from "react"
+import axios from "axios"
 
+import { MonsterContext } from "../Contexts/Monster"
 import Logo from "./MHWLogo.png"
 
 export default function MainScreen() {
+  const { setMonsterName } = useContext(MonsterContext);
+
+  const navigate = useNavigate();
+
+  function handleForm(e) {
+    e.preventDefault();
+    navigate("/monster");
+  }
+
   return (
     <MainScreenDiv>
       <img src={Logo} alt="MHW Wiki Logo" />
-      <Form>
-        <input placeholder="Type the monster's name" />
-        <Link to="/monster-info">
-          <button type="submit"> <ion-icon name="search"></ion-icon> </button>
-        </Link>
+      <Form onSubmit={handleForm}>
+        <input placeholder="Type the monster's name" onChange={(e) => setMonsterName(e.target.value)} />
+        <button type="submit"> <ion-icon name="search"></ion-icon> </button>
       </Form>
     </MainScreenDiv >
   )
