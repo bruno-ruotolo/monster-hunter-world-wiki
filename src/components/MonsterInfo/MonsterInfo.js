@@ -1,11 +1,14 @@
 import styled from "styled-components"
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import axios from "axios"
 
 import Header from "../Header/Header"
 import Loader from "./Loader.svg"
 
 export default function MonsterInfo() {
+  const location = useLocation()
+
   const [monsterData, setMonsterData] = useState({
     name: "",
     description,
@@ -16,9 +19,11 @@ export default function MonsterInfo() {
     rewards: []
   });
 
+  console.log(location)
+
   const [header, setHeader] = useState(false);
 
-  let id = document.URL.slice(-2);
+  let id = location.pathname.slice(-2);
 
   if (id.match(/[a-z]|[A-Z]|\W/gi)) {
     id = id.replace(/[a-z]|[A-Z]|\W/gi, "");
@@ -28,7 +33,7 @@ export default function MonsterInfo() {
     const promise = axios.get(`https://mhw-db.com/monsters/${id}`);
 
     promise.then(response => setMonsterData(response.data))
-  }, [header, id]);
+  }, [header, location]);
 
   const { name, description, species, type, elements, weaknesses, locations, rewards } = monsterData;
   const nameHandle = name.toLowerCase().replace(/\s/, "_");
