@@ -18,7 +18,6 @@ export default function MonsterInfo() {
 
   const [header, setHeader] = useState(false);
 
-
   let id = document.URL.slice(-2);
 
   if (id.match(/[a-z]|[A-Z]|\W/gi)) {
@@ -29,7 +28,7 @@ export default function MonsterInfo() {
     const promise = axios.get(`https://mhw-db.com/monsters/${id}`);
 
     promise.then(response => setMonsterData(response.data))
-  }, [header]);
+  }, [header, id]);
 
   const { name, description, species, type, elements, weaknesses, locations, rewards } = monsterData;
   const nameHandle = name.toLowerCase().replace(/\s/, "_");
