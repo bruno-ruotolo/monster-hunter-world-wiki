@@ -1,13 +1,11 @@
 import styled from "styled-components"
-import { useContext, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 
-import { MonsterContext } from "../Contexts/Monster"
 import Header from "../Header/Header"
 import Loader from "./Loader.svg"
 
 export default function MonsterInfo() {
-  const { monsterId } = useContext(MonsterContext);
   const [monsterData, setMonsterData] = useState({
     name: "",
     description,
@@ -17,6 +15,9 @@ export default function MonsterInfo() {
     locations: [],
     rewards: []
   });
+
+  const [header, setHeader] = useState(false);
+
 
   let id = document.URL.slice(-2);
 
@@ -28,14 +29,14 @@ export default function MonsterInfo() {
     const promise = axios.get(`https://mhw-db.com/monsters/${id}`);
 
     promise.then(response => setMonsterData(response.data))
-  }, []);
+  }, [header]);
 
   const { name, description, species, type, elements, weaknesses, locations, rewards } = monsterData;
   const nameHandle = name.toLowerCase().replace(/\s/, "_");
 
-  let weaknessesArr = null;
-  let locationsArr = null;
-  let rewardsArr = null;
+  let weaknessesArr = "-";
+  let locationsArr = "-";
+  let rewardsArr = "-";
 
   weaknessesArr = (weaknesses.map((weaknesse) => {
     return weaknesse.element;
@@ -51,7 +52,7 @@ export default function MonsterInfo() {
 
   return monsterData.name !== "" ? (
     <>
-      <Header />
+      <Header header={header} setHeader={(value) => setHeader(value)} />
       <MonsterInfoDiv>
         <MonsterNameImg>
           <h1>{name}</h1>
@@ -67,12 +68,11 @@ export default function MonsterInfo() {
           <p>Species: <span>{species}</span> </p>
 
           <h2>Physical Characteristics</h2>
-          <p>Elements: <span>{elements.join(", ")}</span></p>
-          <p>Weaknesses:<span>{weaknessesArr.join(", ")}</span></p>
-
+          <p>Elements: <span> {elements.length !== 0 ? elements.join(", ") : "-"}</span></p>
+          <p>Weaknesses: <span>{weaknessesArr.length !== 0 ? weaknessesArr.join(", ") : "-"}</span></p>
           <h2>Extra Information</h2>
-          <p>Locations: <span>{locationsArr.join(", ")}</span></p>
-          <p>Rewards: <span>{rewardsArr.join(", ")}</span> </p>
+          <p>Locations: <span>{locationsArr.length !== 0 ? locationsArr.join(", ") : "-"}</span></p>
+          <p>Rewards: <span>{rewardsArr.length !== 0 ? rewardsArr.join(", ") : "-"}</span> </p>
 
         </MonsterChar>
       </MonsterInfoDiv>

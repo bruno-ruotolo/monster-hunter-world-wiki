@@ -1,38 +1,53 @@
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
-import { useContext, useState, useEffect } from "react"
-import axios from "axios"
+import { useState, useEffect } from "react"
 
-import { MonsterContext } from "../Contexts/Monster"
+import axios from "axios"
 import Logo from "./MHWLogo.png"
+import RandomMonster from "./RandomMonster"
 
 export default function MainScreen() {
   const [name, setName] = useState('');
-  const [callEffect, setCallEffect] = useState(false)
-  const { monsterId, setMonsterId } = useContext(MonsterContext);
+  const [callEffect, setCallEffect] = useState(false);
+  const [callBackRandom, setCallBackRandom] = useState(false)
 
   const navigate = useNavigate();
+
+  let counter = 0;
+  let monstersResponse = [];
 
   useEffect(() => {
     if (callEffect) {
       const promise = axios.get(`https://mhw-db.com/monsters`);
 
       promise.then(response => {
-        response.data.forEach(response => {
-          if (response.name === name) {
-            setMonsterId(response.id);
+        monstersResponse = response.data;
+        monstersResponse.forEach(response => {
+          if (response.name === capitalizeMonsterName()) {
+            navigate(`/monster/${response.id}`);
+          } else {
+            counter++;
           }
         })
+        console.log(monstersResponse.length);
+        if (counter === monstersResponse.length && !callBackRandom) {
+          alert("Please, check if the monster's name is correct");
+        }
         setCallEffect(false);
       })
       promise.catch(error => { alert(`Algo deu errado ${error.response}`) })
     }
-    if (monsterId !== 0) {
-      navigate(`/monster/${monsterId}`);
-    }
   }, [callEffect]);
 
+  function capitalizeMonsterName() {
+    const monsterName = name;
 
+    return monsterName
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  };
 
   function handleForm(e) {
     e.preventDefault();
@@ -43,8 +58,16 @@ export default function MainScreen() {
     <MainScreenDiv>
       <img src={Logo} alt="MHW Wiki Logo" />
       <Form onSubmit={handleForm}>
-        <input placeholder="Type the monster's name" onChange={(e) => setName(e.target.value)} />
-        <button type="submit"> <ion-icon name="search"></ion-icon> </button>
+        <input
+          placeholder="Type the monster's name"
+          onChange={(e) => setName(e.target.value)}
+          required
+          pattern="[A-Z a-z]+"
+          title="Please enter on alphabets only. "
+          disabled={callEffect}
+        />
+        <button type="submit" disabled={callEffect}> <ion-icon name="search"></ion-icon> </button>
+        <RandomMonster setCallBackRandom={(value) => { setCallBackRandom(value); setCallEffect(value) }} />
       </Form>
     </MainScreenDiv >
   )
@@ -62,14 +85,14 @@ const Form = styled.form`
   display: flex;
   align-items: center;
 
-  button{
+  button {
     text-decoration: none;
     border: none; 
     background-color: transparent;
 
-      ion-icon {
-        color: #ffffff;
-        font-size: 40px;
+    ion-icon {
+      color: #ffffff;
+      font-size: 40px;
     }
   }
 
@@ -82,9 +105,18 @@ const Form = styled.form`
     font-size: 20px;
     font-weight: 800;
     font-family: 'Cinzel', serif;
+     padding-left: 10px;
 
     &::placeholder {
-      text-align: center;
+      position: absolute;
+        line-height: 40px;
+        text-align: center;
+        width: 390px;
+    }
+
+    &:disabled {
+      color: #999999;
+      background-color: #001a00;
     }
   }
 `
