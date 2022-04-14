@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from "react"
 import Logo from "./MHWLogo.png"
 import RandomMonster from "./RandomMonster"
 import { MonsterContext } from "../Contexts/MonsterContext"
+import Footer from "../Footer/Footer"
 
 export default function MainScreen() {
   const { monsterArr } = useContext(MonsterContext)
@@ -68,28 +69,31 @@ export default function MainScreen() {
   }, [name])
 
   return (
-    <MainScreenDiv>
-      <img src={Logo} alt="MHW Wiki Logo" />
-      <Form onSubmit={handleForm}>
-        <input
-          placeholder="Type the monster's name"
-          onChange={(e) => { setName(e.target.value) }}
-          required
-          pattern="[A-Z a-z]+"
-          title="Please enter on alphabets only. "
-          disabled={callEffect}
-          value={name}
-        />
-        <button type="submit" disabled={callEffect}> <ion-icon name="search"></ion-icon> </button>
-        <RandomMonster setCallBackRandom={(value) => { setCallBackRandom(value); setCallEffect(value) }} />
-        <MonsterNameList >
-          {filter.slice(0, 10).map((element, index) => {
-            return <p onClick={() => { setName(element.name); setCallEffect(true) }} key={index}>{element.name}</p>
-          })}
-        </MonsterNameList>
-      </Form>
+    <>
+      <MainScreenDiv>
+        <img src={Logo} alt="MHW Wiki Logo" />
+        <Form onSubmit={handleForm}>
+          <input
+            placeholder="Type the monster's name"
+            onChange={(e) => { setName(e.target.value) }}
+            required
+            pattern="[A-Z a-z]+"
+            title="Please enter on alphabets only. "
+            disabled={callEffect}
+            value={name}
+          />
+          <button type="submit" disabled={callEffect}> <ion-icon name="search"></ion-icon> </button>
+          <RandomMonster setCallBackRandom={(value) => { setCallBackRandom(value); setCallEffect(value) }} />
+          <MonsterNameList >
+            {filter.slice(0, 10).map((element, index) => {
+              return <p onClick={() => { setName(element.name); setCallEffect(true) }} key={index}>{element.name}</p>
+            })}
+          </MonsterNameList>
+        </Form>
+      </MainScreenDiv >
 
-    </MainScreenDiv >
+      <Footer />
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import axios from "axios"
 
 import Header from "../Header/Header"
 import Loader from "./Loader.svg"
+import Footer from "../Footer/Footer"
 
 export default function MonsterInfo() {
   const location = useLocation()
