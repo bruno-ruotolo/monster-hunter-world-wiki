@@ -11,8 +11,8 @@ export default function MonsterProvider({ children }) {
 
     promise.then(response => setMonsterArr(response.data))
     promise.catch(error => { alert(`Algo deu errado ${error.response}`) })
+    console.log(monsterArr)
   }, []);
-
   return (
     <MonsterContext.Provider value={{ monsterArr, setMonsterArr }}>
       {children}

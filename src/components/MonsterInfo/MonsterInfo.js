@@ -19,8 +19,6 @@ export default function MonsterInfo() {
     rewards: []
   });
 
-  console.log(location)
-
   const [header, setHeader] = useState(false);
 
   let id = location.pathname.slice(-2);
@@ -54,6 +52,20 @@ export default function MonsterInfo() {
     return reward.item.name;
   }))
 
+  let linkImg = "";
+
+  if (monsterData.id === 56) {
+    linkImg = "https://static.wikia.nocookie.net/monsterhunter/images/e/ee/MHWI-Stygian_Zinogre_Render_001.png"
+  } else if (monsterData.id === 53) {
+    linkImg = "https://static.wikia.nocookie.net/monsterhunter/images/0/07/MHW-Leshen_Render_001.png"
+  } else if (monsterData.id === 54) {
+    linkImg = "https://static.wikia.nocookie.net/monsterhunter/images/9/9f/MHW-Ancient_Leshen_Render_001.png"
+  } else if (monsterData.id > 54 && monsterData.id !== 56) {
+    linkImg = `https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/mhwi-${nameHandle}_render_001.png`
+  } else {
+    linkImg = `https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/mhw-${nameHandle}_render_001.png`
+  }
+
   return monsterData.name !== "" ? (
     <>
       <Header header={header} setHeader={(value) => setHeader(value)} />
@@ -61,8 +73,8 @@ export default function MonsterInfo() {
         <MonsterNameImg>
           <h1>{name}</h1>
           <img
-            src={`https://monsterhunterworld.wiki.fextralife.com/file/Monster-Hunter-World/mhw-${nameHandle}_render_001.png`}
-            alt="monster" />
+            src={linkImg}
+            alt="Monster Picture" />
         </MonsterNameImg>
 
         <MonsterChar>

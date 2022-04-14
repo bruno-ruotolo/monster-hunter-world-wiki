@@ -25,7 +25,6 @@ export default function Header({ setHeader, header }) {
           counter++;
         }
       })
-      console.log(monsterArr.length);
       if (counter === monsterArr.length) {
         alert("Please, check if the monster's name is correct");
       }
@@ -37,12 +36,23 @@ export default function Header({ setHeader, header }) {
 
   function capitalizeMonsterName() {
     const monsterName = name;
+    console.log(monsterName)
 
-    return monsterName
-      .toLowerCase()
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
+    if (monsterName.includes("Viper Tobi-Kadachi")) {
+      return "Viper Tobi-Kadachi"
+    }
+
+    return monsterName.includes("-") ?
+      monsterName
+        .toLowerCase()
+        .split(/-/g)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join('-')
+      : monsterName
+        .toLowerCase()
+        .split(/\s/g)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
   };
 
   function handleSubmit(e) {
