@@ -84,6 +84,7 @@ const MonsterInfoDiv = styled.section`
  display: flex;
  flex-direction: column;
  align-items: center; 
+ margin-bottom: 80px;
 `
 
 const MonsterNameImg = styled.div`

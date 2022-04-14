@@ -1,43 +1,37 @@
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import { useContext, useState, useEffect } from "react"
-import axios from "axios"
 
 import Logo from "./Logo.png"
-import { MonsterContext } from "../Contexts/Monster";
+import { MonsterContext } from "../Contexts/MonsterContext";
 
 export default function Header({ setHeader, header }) {
+  const { monsterArr } = useContext(MonsterContext);
+
   const [name, setName] = useState("")
   const [callEffect, setCallEffect] = useState(false);
+  const [filter, setFilter] = useState([]);
 
   const navigate = useNavigate();
 
   let counter = 0;
-  let monstersResponse = [];
-
-  const { setMonsterId } = useContext(MonsterContext);
 
   useEffect(() => {
     if (callEffect) {
-      const promise = axios.get(`https://mhw-db.com/monsters`);
-
-      promise.then(response => {
-        monstersResponse = response.data;
-        monstersResponse.forEach(response => {
-          if (response.name === capitalizeMonsterName()) {
-            navigate(`/monster/${response.id}`);
-          } else {
-            counter++;
-          }
-        })
-        console.log(monstersResponse.length);
-        if (counter === monstersResponse.length) {
-          alert("Please, check if the monster's name is correct");
+      monsterArr.forEach(response => {
+        if (response.name === capitalizeMonsterName()) {
+          navigate(`/monster/${response.id}`);
+        } else {
+          counter++;
         }
-        setCallEffect(false);
-        setHeader(!header);
       })
-      promise.catch(error => { alert(`Algo deu errado ${error.response}`) })
+      console.log(monsterArr.length);
+      if (counter === monsterArr.length) {
+        alert("Please, check if the monster's name is correct");
+      }
+      setCallEffect(false);
+      setName("");
+      setHeader(!header);
     }
   }, [callEffect]);
 
@@ -56,10 +50,17 @@ export default function Header({ setHeader, header }) {
     setCallEffect(true);
   }
 
+  useEffect(() => {
+    if (name !== "") {
+      setFilter(monsterArr.filter((data) => {
+        return data.name.toLowerCase().includes(name.toLowerCase());
+      }))
+    } else { setFilter([]) }
+  }, [name])
+
   return (
     <HeaderDiv>
       <img onClick={() => {
-        setMonsterId(0);
         navigate('/')
       }} src={Logo} alt="MHW Wiki Logo" />
       <Form onSubmit={handleSubmit}>
@@ -70,8 +71,14 @@ export default function Header({ setHeader, header }) {
           pattern="[A-Z a-z]+"
           title="Please enter on alphabets only. "
           disabled={callEffect}
+          value={name}
         />
         <button type="submit"> <ion-icon name="search"></ion-icon> </button>
+        <MonsterNameList>
+          {filter.slice(0, 8).map((element, index) => {
+            return <p onClick={() => { setName(element.name); setCallEffect(true) }} key={index}>{element.name}</p>
+          })}
+        </MonsterNameList>
       </Form>
     </HeaderDiv>
   )
@@ -129,4 +136,32 @@ const Form = styled.form`
       background-color: #001a00;
     }
     }
+`
+
+const MonsterNameList = styled.div`
+  background-color: #ffffff;
+  width: 400px;
+  color: #000000;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 50px;
+  padding-left: 10px;
+  font-family: 'Cinzel', serif;
+  font-weight: 800;
+  box-shadow: 2px 2px 4px #7EB561;
+  border-radius: 2px;
+  cursor:pointer;
+
+  p{
+    margin-bottom: 5px;
+  }
+
+  p:first-child{
+    margin-top: 5px;
+  }
+
+  p:last-child{
+    margin-bottom: 5px;
+  }
 `

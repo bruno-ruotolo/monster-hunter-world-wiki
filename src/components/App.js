@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import MainScreen from "./MainScreen/MainScreen"
 import MonsterInfo from "./MonsterInfo/MonsterInfo"
-import MonsterProvider from "./Contexts/Monster"
+import MonsterProvider from "./Contexts/MonsterContext"
 
 import Reset from "./GlobalStyles/Reset"
 import GlobalStyles from "./GlobalStyles/GlobalStyles"
